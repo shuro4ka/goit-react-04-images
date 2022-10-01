@@ -1,0 +1,9 @@
+.Circles {
+  height: 80px;
+  width: 80px;
+  color: #4fa94d;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
