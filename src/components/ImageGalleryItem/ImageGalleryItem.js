@@ -7,7 +7,7 @@ export const ImageGalleryItem = ({ webformatURL, largeImageURL, onClick }) => {
     <li className={styles.ImageGalleryItem}>
       <img
         src={webformatURL}
-        data-url={largeImageURL}
+        data-url={largeImageURL !== undefined ? largeImageURL : webformatURL}
         alt=""
         className={styles.ImageGalleryItemImage}
         onClick={onClick}

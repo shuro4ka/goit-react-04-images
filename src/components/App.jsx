@@ -8,49 +8,40 @@ import { Loader } from './Loader/Loader';
 import { Modal } from 'components/Modal/Modal';
 
 export const App = () => {
-  const [images, setImages] = useState([])
-  const [page, setPage] = useState(1)
-  const [queryName, setQueryName] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [largeImgUrl, setLargeImg] = useState('')
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [queryName, setQueryName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [largeImgUrl, setLargeImg] = useState('');
 
+  useEffect(() => {
+    if (!queryName) return;
 
- useEffect(() => { 
-    if(!queryName) return;
+    async function getImages() {
+      setIsLoading(true);
+      try {
+        const data = await getApi(page, queryName);
 
-  async function getImages(){
-    setIsLoading(true);
-    try{
-      const data = await getApi(page, queryName);
+        if (!data.length) {
+          alert('No images found for this query');
+        }
 
-      if(!data.length){
-        alert('No images found for this query');
-      }
-      
         const filteredImagesArr = data.map(
           ({ id, largeImgUrl, webformatURL }) => {
             return { id, largeImgUrl, webformatURL };
           }
         );
         setImages(prevImages => [...prevImages, ...filteredImagesArr]);
-          
-      }catch(err) {
+      } catch (err) {
         console.log(err);
-      }finally{
+      } finally {
         setIsLoading(false);
       }
-  }
+    }
 
-  getImages();
-},[queryName, page]);
+    getImages();
+  }, [queryName, page]);
 
-
-
-  // const getMoreImages = () => {
-  //   setPage(prevPage => prevPage + 1);
-  // };
-
-  
   const handleSubmit = e => {
     e.preventDefault();
     const inputValue = e.currentTarget.elements[1].value;
@@ -60,16 +51,16 @@ export const App = () => {
   };
 
   const handleLoadMore = () => {
-    setPage((prevPage => prevPage + 1));
+    setPage(prevPage => prevPage + 1);
   };
 
   const setLargeImgUrl = e => {
-   setLargeImg(e.target.dataset.url)
-   
+    console.log(e.target);
+    setLargeImg(e.target.dataset.url);
   };
 
   const closeModal = () => {
-    setLargeImg('')
+    setLargeImg('');
   };
 
   return (
@@ -82,6 +73,5 @@ export const App = () => {
       {isLoading && <Loader />}
       {largeImgUrl && <Modal url={largeImgUrl} onClick={closeModal} />}
     </div>
-  )
-      }
-    
+  );
+};
